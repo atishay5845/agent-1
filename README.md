@@ -1,8 +1,10 @@
-# Water Intake Coach — Agent Project 
+# Water Intake Coach
 
-Tools: `log_water(ml)` logs how much water the user drank and updates today's running total. `get_progress()` checks that total against the daily goal and returns how much is left and whether the goal is met. Two additional tools support the group add-on: `get_weekly_average()` and `get_streak()`, which compute a 7-day average and the current goal-met streak from logged history.
+In this project, I built a stateful AI agent to help users track their daily water intake. The agent uses a multi-step ReAct loop and works with the Groq API via the OpenAI SDK.
 
-Memory: The agent keeps two things across the whole conversation: the day's running water total (plus a short history of past days, used for the weekly average and streak), and the full chat history. This means the agent never has to be reminded what's already been logged — if a user logs a drink and asks about their progress three turns later, it still has the real numbers, not a guess.
+**Tools:** I implemented four custom tools: `log_water(ml)` to convert units (like glasses or bottles) into milliliters and log intake to today's total, alongside `get_progress()` to check remaining volume against the daily goal. Two additional tools, `get_weekly_average()` and `get_streak()`, compute 7-day intake averages and track consecutive goal-met streaks.
 
-One honest failure and how I handled it: We originally built this on GitHub Models, but GitHub fully retired that service partway through the project. We switched to Microsoft Foundry next, but ran into deprecated models and Azure region/subscription errors we couldn't resolve on a free tier. We moved to Groq, which is free with no card and fully OpenAI-SDK-compatible, so only the client setup (three lines) had to change — the tools, memory, and agent loop were untouched. This taught us to keep the model-calling code separate from the agent logic so a provider swap stays small.
+**Memory:** Across the conversation, the agent maintains persistent memory of the day's running water total, a short history of past days, and the full chat history. This stateful tracking means the agent never needs to be reminded of previously logged drinks when answering progress questions several turns later.
+
+**Honest Failure & Resolution:** I initially developed the project using GitHub Models, which was retired mid-development. I then attempted to use Microsoft Foundry, but ran into deprecated model endpoints and free-tier Azure region errors. To resolve this, I migrated to Groq's OpenAI-compatible API. Because I decoupled the model client from the agent loop, tools, and memory, switching providers required changing just three lines of setup code while keeping the rest of the system intact.
 
